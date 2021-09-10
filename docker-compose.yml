@@ -1,0 +1,37 @@
+version: "2"
+
+services:
+  legacy:
+    container_name: legacy
+    build: ./legacy
+    volumes:
+      - ./legacy:/app
+    networks:
+      - local-network
+    tty: true
+
+  new:
+    container_name: new
+    build: ./new
+    volumes:
+      - ./new:/app
+    networks:
+      - local-network
+    tty: true
+
+  nginx:
+    container_name: nginx
+    build: nginx
+    ports:
+      - "3333:80"
+    networks:
+      - local-network
+    links:
+      - legacy
+      - new
+    depends_on:
+      - legacy
+      - new
+
+networks:
+  local-network:
